@@ -14,8 +14,8 @@ describe('🔀 LLM Router — Multi-Provider', () => {
     jest.resetModules();
     jest.useFakeTimers();
     // Configurer plusieurs providers
-    process.env.GEMINI_KEYS        = JSON.stringify(['AIzaSy_gemini_test_key']);
-    process.env.GROQ_API_KEY       = 'gsk_groq_test_key_1234567890';
+    process.env.GEMINI_KEYS        = JSON.stringify(['GEMINI-TEST-gemini_test_key']);
+    process.env.GROQ_API_KEY       = 'GROQ-TEST-groq_test_key_1234567890';
     process.env.MISTRAL_API_KEY    = 'msk_mistral_test_key_123456';
     process.env.COHERE_API_KEY     = 'cohere_test_key_1234567890';
 
