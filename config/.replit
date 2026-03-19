@@ -1,0 +1,18 @@
+run         = "npm start"
+entrypoint  = "server.js"
+hidden      = [".config", "package-lock.json", "logs/"]
+
+[nix]
+channel = "stable-23_05"
+
+[env]
+PORT     = "3000"
+NODE_ENV = "production"
+
+[deployment]
+run         = ["sh", "-c", "npm start"]
+deploymentTarget = "cloudrun"
+
+[[ports]]
+localPort = 3000
+externalPort = 80
