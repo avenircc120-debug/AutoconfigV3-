@@ -138,7 +138,7 @@ describe('🔄 [2] Retry — Exponential Backoff', () => {
   beforeEach(() => {
     jest.resetModules();
     jest.useFakeTimers();
-    process.env.GEMINI_KEYS = JSON.stringify(['AIzaSy_test_key_1_abcdefgh', 'AIzaSy_test_key_2_ijklmnop']);
+    process.env.GEMINI_KEYS = JSON.stringify(['GEMINI-TEST-test_key_1_abcdefgh', 'GEMINI-TEST-test_key_2_ijklmnop']);
     jest.mock('axios');
     ({ callGemini, RETRY_CONFIG } = require('../../services/gemini-client'));
   });
@@ -298,7 +298,7 @@ describe('🔑 [3] GeminiKeyRotator — Rotation de clés', () => {
   // ── Sélection de clé ──────────────────────────────────────────
 
   test('getAvailableKey() retourne la première clé disponible', async () => {
-    process.env.GEMINI_KEYS = JSON.stringify(['AIzaSy_key1', 'AIzaSy_key2']);
+    process.env.GEMINI_KEYS = JSON.stringify(['GEMINI-TEST-key1', 'GEMINI-TEST-key2']);
     jest.resetModules();
     ({ GeminiKeyRotator } = require('../../utils/gemini-key-rotator'));
     const r = new GeminiKeyRotator();
@@ -384,10 +384,10 @@ describe('🔑 [3] GeminiKeyRotator — Rotation de clés', () => {
   // ── maskKey ───────────────────────────────────────────────────
 
   test('maskKey() masque correctement une clé API', () => {
-    const masked = GeminiKeyRotator.maskKey('AIzaSy_AbCdEfGhIjKlMnOpQr');
+    const masked = GeminiKeyRotator.maskKey('GEMINI-TEST-AbCdEfGhIjKlMnOpQr');
     expect(masked).toContain('AIzaS');
     expect(masked).toContain('…');
-    expect(masked).not.toBe('AIzaSy_AbCdEfGhIjKlMnOpQr'); // masqué
+    expect(masked).not.toBe('GEMINI-TEST-AbCdEfGhIjKlMnOpQr'); // masqué
   });
 
   test('maskKey() gère les clés courtes', () => {
@@ -422,7 +422,7 @@ describe('🧪 Intégration [1+2+3] — analyzeRepo() avec cache + retry + rotat
   beforeEach(() => {
     jest.resetModules();
     jest.useFakeTimers();
-    process.env.GEMINI_KEYS = JSON.stringify(['AIzaSy_test_integration_key']);
+    process.env.GEMINI_KEYS = JSON.stringify(['GEMINI-TEST-test_integration_key']);
   });
 
   afterEach(() => {
