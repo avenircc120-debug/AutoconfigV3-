@@ -32,7 +32,7 @@ describe('⚡ Gateway — createClient()', () => {
   });
 
   test('crée une instance axios avec la bonne baseURL', () => {
-    createClient({ baseURL: 'https://api.github.com', token: 'ghp_test' });
+    createClient({ baseURL: 'https://api.github.com', token: 'GITHUB-TEST-test' });
     expect(axios.create).toHaveBeenCalledWith(
       expect.objectContaining({ baseURL: 'https://api.github.com' })
     );
