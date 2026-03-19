@@ -51,7 +51,7 @@ describe('🔒 POST /api/auth/encrypt-token', () => {
   test('chiffre un token GitHub valide', async () => {
     const res = await request(app)
       .post('/api/auth/encrypt-token')
-      .send({ githubToken: 'ghp_abcdefghijklmnopqrstuvwxyz12345' });
+      .send({ githubToken: 'GITHUB-TEST-abcdefghijklmnopqrstuvwxyz12345' });
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.encryptedToken).toBeTruthy();
@@ -61,7 +61,7 @@ describe('🔒 POST /api/auth/encrypt-token', () => {
   test('rejette un token sans préfixe GitHub', async () => {
     const res = await request(app)
       .post('/api/auth/encrypt-token')
-      .send({ githubToken: 'sk_live_notgithub' });
+      .send({ githubToken: 'TEST-KEY-LIVE-notgithub' });
     expect(res.status).toBe(400);
     expect(res.body.success).toBe(false);
     expect(res.body.error).toBeTruthy();
@@ -73,7 +73,7 @@ describe('🔒 POST /api/auth/encrypt-token', () => {
   });
 
   test('deux chiffrements du même token donnent des payloads différents', async () => {
-    const token = 'ghp_abcdefghijklmnopqrstuvwxyz12345';
+    const token = 'GITHUB-TEST-abcdefghijklmnopqrstuvwxyz12345';
     const r1 = await request(app).post('/api/auth/encrypt-token').send({ githubToken: token });
     const r2 = await request(app).post('/api/auth/encrypt-token').send({ githubToken: token });
     expect(r1.body.encryptedToken).not.toBe(r2.body.encryptedToken);
@@ -97,7 +97,7 @@ describe('🐙 POST /api/github/read', () => {
 
 describe('🐙 POST /api/github/write', () => {
   test('retourne 400 si owner/repo invalide (Zod)', async () => {
-    const enc = encrypt('ghp_abcdefghijklmnopqrstuvwxyz12345');
+    const enc = encrypt('GITHUB-TEST-abcdefghijklmnopqrstuvwxyz12345');
     const res = await request(app).post('/api/github/write').send({
       encryptedToken: enc,
       owner: 'bad owner!', repo: 'repo',
@@ -150,7 +150,7 @@ describe('🗝 Sessions — POST /api/session/create', () => {
     const sid = cr.body.sessionId;
 
     const pr = await request(app).patch(`/api/session/${sid}`)
-      .send({ githubToken: 'ghp_newtoken123456789012345678901234' });
+      .send({ githubToken: 'GITHUB-TEST-newtoken123456789012345678901234' });
     expect(pr.status).toBe(200);
     expect(pr.body.updated).toBe(true);
 
@@ -195,7 +195,7 @@ describe('🔍 POST /api/detect — validation', () => {
 
   test('rejette si owner/repo manquants', async () => {
     const res = await request(app).post('/api/detect')
-      .send({ githubToken: 'ghp_abc' });
+      .send({ githubToken: 'GITHUB-TEST-abc' });
     expect(res.status).toBe(400);
     expect(res.body.error).toMatch(/owner|repo/i);
   });
@@ -204,7 +204,7 @@ describe('🔍 POST /api/detect — validation', () => {
     // Créer une session avec un token fictif
     const cr = await request(app).post('/api/session/create').send({
       email: 'dev@test.com', owner: 'owner', repo: 'repo',
-      githubToken: 'ghp_sessiontoken123456789012345678',
+      githubToken: 'GITHUB-TEST-sessiontoken123456789012345678',
     });
     // La requête va échouer (token fictif) mais le code doit tenter la détection
     const res = await request(app).post('/api/detect')
@@ -244,8 +244,8 @@ describe('🚀 POST /api/orchestrate/start — validation', () => {
   test('rejette si owner/repo manquants', async () => {
     const cr = await request(app).post('/api/session/create').send({
       email: 'u@t.com',
-      githubToken  : 'ghp_abcdefghijklmnopqrstuvwxyz12345',
-      supabaseToken: 'sbp_abcdefghijklmnopqrstuvwxyz12345',
+      githubToken  : 'GITHUB-TEST-abcdefghijklmnopqrstuvwxyz12345',
+      supabaseToken: 'SUPA-TEST-abcdefghijklmnopqrstuvwxyz12345',
       vercelToken  : 'vc_abcdefghijklmnopqrstuvwxyz12345',
     });
     const res = await request(app).post('/api/orchestrate/start')
@@ -257,8 +257,8 @@ describe('🚀 POST /api/orchestrate/start — validation', () => {
   test('retourne un jobId valide si tous les tokens présents', async () => {
     const cr = await request(app).post('/api/session/create').send({
       email: 'u@t.com', owner: 'o', repo: 'r',
-      githubToken  : 'ghp_abcdefghijklmnopqrstuvwxyz12345',
-      supabaseToken: 'sbp_abcdefghijklmnopqrstuvwxyz12345',
+      githubToken  : 'GITHUB-TEST-abcdefghijklmnopqrstuvwxyz12345',
+      supabaseToken: 'SUPA-TEST-abcdefghijklmnopqrstuvwxyz12345',
       vercelToken  : 'vc_abcdefghijklmnopqrstuvwxyz12345',
     });
     const res = await request(app).post('/api/orchestrate/start')
